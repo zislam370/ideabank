@@ -1,0 +1,47 @@
+@if($form_data)
+<table class="table table-bordered table-white">
+    <thead>
+        <tr>
+            <th>@lang('form/title.head')</th>
+            <th>@lang('form/title.Due_date')</th>
+            <th>@lang('form/title.Target')</th>
+            <th>@lang('form/title.Achieved')</th>
+            <th>@lang('form/title.comment')</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php $i = 0;?>
+        @foreach ($form_data->items as $item)
+        <tr>
+            <td>
+                {{{$item->task}}}
+            </td>
+            <td>
+                {{{$item->due_date}}}
+            </td>
+            <td>
+                {{{$item->target}}}
+            </td>
+            <td>
+                {{{$item->achieved}}}
+            </td>
+            <td>
+                {{{$item->comment}}}
+            </td>
+        </tr>
+        <?php $i++ ?>
+        @endforeach
+    </tbody>
+</table>
+@else
+<table>
+    <tbody>
+    <tr>
+        <td>
+            No Data Found
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+@endif

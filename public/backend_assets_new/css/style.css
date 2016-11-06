@@ -1,0 +1,25 @@
+html,body{
+    /*font-family: 'NikoshBAN' !important;*/
+    font-family: 'kalpurushregular' !important;
+}
+#menu #sidebar-fusion-wrapper #logoWrapper .media a.name,
+#menu #sidebar-fusion-wrapper #logoWrapper .media p{
+    color: #000;
+}
+
+#menu > div ul{
+    background-color: #ccc;
+}
+
+#menu > div ul > li.active.hasSubmenu > a{
+    background-color: #9962a6;
+}
+#menu > div ul > li.active.hasSubmenu > a,
+#menu > div ul > li.active.hasSubmenu > a > i:before{
+    color: #fff;
+}
+
+.pagination li a{
+    display: inline-block;
+    float: left;
+}

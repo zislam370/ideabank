@@ -1,0 +1,144 @@
+<?php
+
+class {{className}} extends BaseController {
+
+	/**
+	 * {{Model}} Repository
+	 *
+	 * @var {{Model}}
+	 */
+	protected ${{model}};
+
+	public function __construct({{Model}} ${{model}})
+	{
+		$this->{{model}} = ${{model}};
+	}
+
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return Response
+	 */
+	public function getIndex()
+	{
+	    ${{models}} = $this->{{model}}->orderBy('created_at', 'DESC')->paginate(10);
+
+        return View::make('{{models}}.index', compact('{{models}}'));
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return Response
+	 */
+	public function getCreate()
+	{
+		return View::make('{{models}}.create');
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @return Response
+	 */
+	public function postCreate()
+	{
+		$input = Input::all();
+		$validation = Validator::make($input, {{Model}}::$rules);
+
+		if ($validation->passes())
+		{
+			$this->{{model}}->create($input);
+
+			return Redirect::route('{{models}}');
+		}
+
+		return Redirect::route('create/{{model}}')
+			->withInput()
+			->withErrors($validation)
+			->with('message', 'There were validation errors.');
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function getEdit($id)
+	{
+
+		${{model}} = $this->{{model}}->find($id);
+
+		if (is_null(${{model}}))
+		{
+			return Redirect::route('{{models}}');
+		}
+
+		return View::make('{{models}}.edit', compact('{{model}}'));
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function postEdit($id)
+	{
+
+		$input = array_except(Input::all(), '_method');
+		$validation = Validator::make($input, {{Model}}::$rules);
+
+        // If validation fails, we'll exit the operation now.
+        if ($validation->fails()) {
+            // Ooops.. something went wrong
+            return Redirect::back()->withInput()->withErrors($validation);
+        }
+    	${{model}} = $this->{{model}}->find($id);
+
+        if (${{model}}->update($input)) {
+            // Redirect to the {{models}} page
+            return Redirect::to("{{models}}/$id/edit")->with('success', Lang::get('{{models}}/message.update.success'));
+        }
+
+        // Redirect to the {{models}} management page
+        return Redirect::to("{{models}}/$id/edit")->with('error', Lang::get('tweets/message.update.error'));
+	}
+
+	/**
+     * Delete confirmation for the given group.
+     *
+     * @param  int      $id
+     * @return View
+     */
+    public function getModalDelete($id = null)
+    {
+        $model = '{{models}}';
+        $confirm_route = $error = null;
+        // Check if the {{models}} exists
+        if (is_null(${{model}} = $this->{{model}}->find($id))) {
+
+            $error = Lang::get('{{models}}/message.not_found');
+            return View::make('backend/layouts/modal_confirmation', compact('error', 'model', 'confirm_route'));
+        }
+
+        $confirm_route =  URL::action('delete/{{model}}', array('id'=>${{model}}->id));
+        return View::make('backend/layouts/modal_confirmation', compact('error', 'model', 'confirm_route'));
+    }
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function getDelete($id)
+	{
+
+        $this->{{model}}->find($id)->delete();
+        // Redirect to the {{models}} management page
+        return Redirect::route('{{models}}')->with('success', Lang::get('{{models}}/message.success.delete'));
+	}
+
+}

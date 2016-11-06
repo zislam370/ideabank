@@ -1,0 +1,25 @@
+language: php
+php:
+- 5.4
+- 5.5
+- 5.6
+env:
+- DB=mysql
+before_script:
+- if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS laravel4_testing;"
+  -utravis; fi
+- curl -s http://getcomposer.org/installer | php
+- mkdir -p app/config/production
+- cp app/config/local/database.php.dist app/config/database.php
+- cp app/config/local/mail.php.dist app/config/mail.php
+- php composer.phar self-update
+- php composer.phar install --prefer-source --no-interaction --dev
+- php artisan key:generate
+- php artisan migrate:install
+- php artisan migrate --package cartalyst/sentry
+- php artisan migrate
+- php artisan db:seed
+script: phpunit
+notifications:
+  slack:
+    secure: oFcL0uevjLJEUtCZC0rVSaONJ/e5HMHeci5YMGfIebp9Ce7B7kS9c058hT+tbHusiNwEITD91MG6c37XaRsgT81QIV3tHb2bijx7aKxyRECu8xotLI6BBbAYi8Jm4xNo+kyefhVlUqqYSqGAqrjyYNmgQBTmN80mYPLHZn0Xzis=
